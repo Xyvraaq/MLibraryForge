@@ -1,5 +1,7 @@
 # MLibraryForge
 
+[![MLibraryForge](https://i.ibb.co/PJPhrvc/mlf.png)](#readme)
+
 MLibraryForge e uno strumento Python basato su [yt-dlp](https://github.com/yt-dlp/yt-dlp) che trasforma una playlist testuale in una libreria di file MP3 ordinati, con copertina e metadati coerenti con i dati forniti dall'utente.
 
 Il progetto e pensato per playlist esportate manualmente da Spotify nel formato:
