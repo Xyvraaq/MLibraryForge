@@ -24,6 +24,7 @@ Artista - Titolo (Remix)
 - Salta i brani gia scaricati anche se il numero iniziale è cambiato.
 - Aggiorna i metadati dei file gia presenti senza riscaricarli.
 - Sposta in `Musica` i vecchi MP3 nella cartella principale quando corrispondono alla playlist corrente.
+-  Crea `brani_non_scaricati.txt` con i nomi delle tracce rimaste non scaricate.
 
 ## Requisiti
 
@@ -86,6 +87,11 @@ MLibraryForge/
 ├─ Musica/          # file MP3 finali
 └─ Musica/.tmp/     # file temporanei durante il download
 ```
+
+Nella cartella principale viene inoltre creato `brani_non_scaricati.txt`.
+Contiene una traccia per riga e viene aggiornato durante l'esecuzione. A ogni
+nuovo avvio viene ricreato da zero, quindi non conserva brani che nel frattempo
+sono stati scaricati correttamente.
 
 I file finali avranno nomi simili a:
 
