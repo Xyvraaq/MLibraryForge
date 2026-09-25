@@ -50,7 +50,9 @@ Installa o aggiorna i componenti Python con:
 python -m pip install -U yt-dlp mutagen
 ```
 
-`ffmpeg` deve essere installato separatamente e il suo percorso deve essere presente nel `PATH` di Windows.
+```powershell
+winget install Gyan.FFmpeg
+```
 
 ## Installazione
 
