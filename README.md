@@ -133,7 +133,3 @@ Quando i risultati migliori sono troppo simili tra loro o hanno un punteggio ins
 ## Note d'uso
 
 Usa MLibraryForge solo per contenuti che hai il diritto di scaricare e conserva i file nel rispetto delle leggi applicabili e dei termini dei servizi utilizzati.
-
-## Licenza
-
-Il progetto non dichiara ancora una licenza. Aggiungi una licenza prima di distribuire pubblicamente il codice.
