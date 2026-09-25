@@ -50,6 +50,8 @@ Installa o aggiorna i componenti Python con:
 python -m pip install -U yt-dlp mutagen
 ```
 
+Installa FFmpeg con:
+
 ```powershell
 winget install Gyan.FFmpeg
 ```
