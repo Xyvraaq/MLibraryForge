@@ -16,6 +16,7 @@ BASE_DIR = Path(__file__).resolve().parent
 INPUT_FILE = BASE_DIR / "playlist.txt"
 OUTPUT_DIR = BASE_DIR / "Musica"
 TEMP_DIR = OUTPUT_DIR / ".tmp"
+NOT_DOWNLOADED_FILE = BASE_DIR / "brani_non_scaricati.txt"
 
 RESULTS = 8
 MIN_SCORE = 0.58
@@ -257,6 +258,15 @@ def migrate_legacy_files(tracks: list[str]) -> None:
             print(f"Avviso: non posso spostare {path.name}: {error}")
 
 
+def save_not_downloaded(tracks: list[str]) -> None:
+    """Scrive una traccia per riga, senza duplicati."""
+    unique_tracks = list(dict.fromkeys(tracks))
+    content = "\n".join(unique_tracks)
+    if content:
+        content += "\n"
+    NOT_DOWNLOADED_FILE.write_text(content, encoding="utf-8")
+
+
 def write_exact_metadata(filename: Path, artist: str, track: str) -> bool:
     """Scrive i tag ID3 Spotify senza toccare la copertina incorporata."""
     if not track and not artist:
@@ -428,6 +438,8 @@ def main() -> None:
     ]
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     migrate_legacy_files(tracks)
+    not_downloaded: list[str] = []
+    save_not_downloaded(not_downloaded)
 
     total = len(tracks)
     print(f"Trovate {total} tracce.")
@@ -459,6 +471,8 @@ def main() -> None:
         results = choose_result(query, search_youtube(query))
         if not results:
             print("NESSUN RISULTATO MUSICALE AFFIDABILE: saltato.")
+            not_downloaded.append(query)
+            save_not_downloaded(not_downloaded)
             continue
 
         print("\nRISULTATI VALIDI:")
@@ -483,11 +497,19 @@ def main() -> None:
         print(f"Score  : {best_score:.2f}")
         print(f"URL    : {url}")
 
-        if not url or best_score < MIN_SCORE or best_score - second_score < MIN_MARGIN:
+        if not url:
+            print("ERRORE: il risultato non contiene un URL scaricabile; saltato.")
+            not_downloaded.append(query)
+            save_not_downloaded(not_downloaded)
+            continue
+
+        if best_score < MIN_SCORE or best_score - second_score < MIN_MARGIN:
             print("ATTENZIONE: corrispondenza bassa o ambigua; non scarico automaticamente.")
             choice = input("Scaricare comunque? [s/N]: ").strip().lower()
             if choice != "s":
                 print("Saltato.")
+                not_downloaded.append(query)
+                save_not_downloaded(not_downloaded)
                 continue
 
         artist, track = parse_track(query)
@@ -495,6 +517,8 @@ def main() -> None:
             print(f"OK -> {final_path.name}")
         else:
             print("Download fallito.")
+            not_downloaded.append(query)
+            save_not_downloaded(not_downloaded)
 
     print("\n" + "=" * 70)
     print("OPERAZIONE COMPLETATA")
