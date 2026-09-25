@@ -15,13 +15,13 @@ Artista - Titolo (Remix)
 - Cerca 8 risultati YouTube per ogni brano.
 - Confronta artista, titolo e nome del canale.
 - Valuta le versioni come Remix, Extended, Vocal, Dub, Original Mix e simili.
-- Scarta risultati poco attendibili come recap, episodi, trailer, podcast, reaction, cover e contenuti Netflix.
-- Chiede conferma quando la corrispondenza e bassa o ambigua.
+- Scarta risultati poco attendibili come recap, episodi, trailer, podcast, reaction, cover, ecc.
+- Chiede conferma quando la corrispondenza è bassa o ambigua.
 - Mantiene l'ordine originale della playlist con un prefisso numerico a tre cifre.
 - Conserva il testo Spotify nel nome del file, rimuovendo solo i caratteri vietati da Windows.
 - Scrive nei metadati il titolo e l'artista della playlist, non il titolo o il canale YouTube.
 - Incorpora copertina e metadati nel file MP3.
-- Salta i brani gia scaricati anche se il numero iniziale e cambiato.
+- Salta i brani gia scaricati anche se il numero iniziale è cambiato.
 - Aggiorna i metadati dei file gia presenti senza riscaricarli.
 - Sposta in `Musica` i vecchi MP3 nella cartella principale quando corrispondono alla playlist corrente.
 
