@@ -144,7 +144,8 @@ risultati migliori sono troppo simili tra loro o il punteggio e insufficiente,
 compare invece un menu interattivo:
 
 - digita un numero da `1` a `8` per scegliere quel risultato;
-- premi `Invio` oppure digita `s` per saltare il brano e inserirlo in `brani_non_scaricati.txt`.
+- premi `Invio` per usare automaticamente il risultato migliore;
+- digita `s` per saltare il brano e inserirlo in `brani_non_scaricati.txt`.
 
 Una scelta manuale confermata dall'utente ha precedenza sulle soglie automatiche.
 
