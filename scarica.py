@@ -41,6 +41,8 @@ VERSION_PHRASES = (
     "acoustic",
     "live",
     "remaster",
+    "topic",
+    "vevo",
 )
 
 # Parole tipiche dei risultati non musicali che causavano falsi positivi.
