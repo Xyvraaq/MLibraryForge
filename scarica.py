@@ -523,7 +523,7 @@ def main() -> None:
 
         if ambiguous:
             print("\nATTENZIONE: corrispondenza bassa o ambigua.")
-            selected = select_result(results, allow_automatic=False)
+            selected = select_result(results, allow_automatic=True)
             if selected is None:
                 print("Saltato.")
                 not_downloaded.append(query)
