@@ -2,6 +2,7 @@
 
 [![MLibraryForge](https://i.ibb.co/PJPhrvc/mlf.png)](#readme)
 
+
 MLibraryForge e uno strumento Python basato su [yt-dlp](https://github.com/yt-dlp/yt-dlp) che trasforma una playlist testuale in una libreria di file MP3 ordinati, con copertina e metadati coerenti con i dati forniti dall'utente.
 
 Il progetto e pensato per playlist esportate manualmente da Spotify nel formato:
@@ -17,16 +18,17 @@ Artista - Titolo (Remix)
 - Cerca 8 risultati YouTube per ogni brano.
 - Confronta artista, titolo e nome del canale.
 - Valuta le versioni come Remix, Extended, Vocal, Dub, Original Mix e simili.
-- Scarta risultati poco attendibili come recap, episodi, trailer, podcast, reaction, cover, ecc.
-- Chiede conferma quando la corrispondenza è bassa o ambigua.
+- Scarta risultati poco attendibili come recap, episodi, trailer, podcast, reaction, cover e contenuti Netflix.
+- Chiede conferma quando la corrispondenza e bassa o ambigua.
+- Permette di scegliere manualmente uno degli 8 risultati solo quando la corrispondenza e ambigua.
 - Mantiene l'ordine originale della playlist con un prefisso numerico a tre cifre.
 - Conserva il testo Spotify nel nome del file, rimuovendo solo i caratteri vietati da Windows.
 - Scrive nei metadati il titolo e l'artista della playlist, non il titolo o il canale YouTube.
 - Incorpora copertina e metadati nel file MP3.
-- Salta i brani gia scaricati anche se il numero iniziale è cambiato.
+- Salta i brani gia scaricati anche se il numero iniziale e cambiato.
 - Aggiorna i metadati dei file gia presenti senza riscaricarli.
 - Sposta in `Musica` i vecchi MP3 nella cartella principale quando corrispondono alla playlist corrente.
--  Crea `brani_non_scaricati.txt` con i nomi delle tracce rimaste non scaricate.
+- Crea `brani_non_scaricati.txt` con i nomi delle tracce rimaste non scaricate.
 
 ## Requisiti
 
@@ -50,11 +52,7 @@ Installa o aggiorna i componenti Python con:
 python -m pip install -U yt-dlp mutagen
 ```
 
-Installa FFmpeg con:
-
-```powershell
-winget install Gyan.FFmpeg
-```
+`ffmpeg` deve essere installato separatamente e il suo percorso deve essere presente nel `PATH` di Windows.
 
 ## Installazione
 
@@ -140,7 +138,15 @@ La scelta considera:
 - durata plausibile per un brano musicale;
 - presenza di termini che indicano contenuti non musicali.
 
-Quando i risultati migliori sono troppo simili tra loro o hanno un punteggio insufficiente, il programma chiede conferma invece di scaricare automaticamente un risultato incerto.
+Quando il primo risultato supera le soglie di sicurezza ed e abbastanza distante
+dal secondo, il programma scarica automaticamente senza fare domande. Se i
+risultati migliori sono troppo simili tra loro o il punteggio e insufficiente,
+compare invece un menu interattivo:
+
+- digita un numero da `1` a `8` per scegliere quel risultato;
+- premi `Invio` oppure digita `s` per saltare il brano e inserirlo in `brani_non_scaricati.txt`.
+
+Una scelta manuale confermata dall'utente ha precedenza sulle soglie automatiche.
 
 ## Note d'uso
 
