@@ -221,6 +221,39 @@ def choose_result(query: str, results: list[dict]) -> list[tuple[float, dict]]:
     return sorted(scored, key=lambda item: item[0], reverse=True)
 
 
+def result_url(result: dict) -> str | None:
+    return result.get("webpage_url") or (
+        f"https://www.youtube.com/watch?v={result.get('id')}"
+        if result.get("id")
+        else None
+    )
+
+
+def select_result(
+    results: list[tuple[float, dict]],
+    allow_automatic: bool = True,
+) -> tuple[float, dict, bool] | None:
+    """Restituisce il risultato scelto e se la scelta e stata manuale."""
+    while True:
+        automatic_label = "INVIO=automatico" if allow_automatic else "INVIO=salta"
+        choice = input(
+            f"\nScegli un risultato [1-{len(results)}], {automatic_label}, s=salta: "
+        ).strip().lower()
+        if choice == "":
+            if not allow_automatic:
+                return None
+            score, result = results[0]
+            return score, result, False
+        if choice in {"s", "skip"}:
+            return None
+        if choice.isdigit():
+            position = int(choice)
+            if 1 <= position <= len(results):
+                score, result = results[position - 1]
+                return score, result, True
+        print(f"Scelta non valida. Inserisci un numero da 1 a {len(results)}, INVIO o s.")
+
+
 def expected_filename(index: int, query: str) -> str:
     # Il prefisso mantiene l'ordine Spotify; il testo dopo il prefisso e il
     # testo della playlist, salvo i caratteri vietati da Windows.
@@ -481,17 +514,31 @@ def main() -> None:
             uploader = result.get("uploader", result.get("channel", ""))
             print(f"{position}. {title} | {uploader} | score {score:.2f}")
 
-        best_score, best = results[0]
+        automatic_score, automatic_result = results[0]
         second_score = results[1][0] if len(results) > 1 else 0.0
-        title = best.get("title", "Titolo sconosciuto")
-        uploader = best.get("uploader", best.get("channel", ""))
-        url = best.get("webpage_url") or (
-            f"https://www.youtube.com/watch?v={best.get('id')}"
-            if best.get("id")
-            else None
+        ambiguous = (
+            automatic_score < MIN_SCORE
+            or automatic_score - second_score < MIN_MARGIN
         )
 
+        if ambiguous:
+            print("\nATTENZIONE: corrispondenza bassa o ambigua.")
+            selected = select_result(results, allow_automatic=False)
+            if selected is None:
+                print("Saltato.")
+                not_downloaded.append(query)
+                save_not_downloaded(not_downloaded)
+                continue
+        else:
+            selected = (automatic_score, automatic_result, False)
+
+        best_score, best, manual_selection = selected
+        title = best.get("title", "Titolo sconosciuto")
+        uploader = best.get("uploader", best.get("channel", ""))
+        url = result_url(best)
+
         print("\nSCELTO:")
+        print(f"Selezione: {'manuale' if manual_selection else 'automatica'}")
         print(f"Titolo : {title}")
         print(f"Canale : {uploader}")
         print(f"Score  : {best_score:.2f}")
@@ -502,15 +549,6 @@ def main() -> None:
             not_downloaded.append(query)
             save_not_downloaded(not_downloaded)
             continue
-
-        if best_score < MIN_SCORE or best_score - second_score < MIN_MARGIN:
-            print("ATTENZIONE: corrispondenza bassa o ambigua; non scarico automaticamente.")
-            choice = input("Scaricare comunque? [s/N]: ").strip().lower()
-            if choice != "s":
-                print("Saltato.")
-                not_downloaded.append(query)
-                save_not_downloaded(not_downloaded)
-                continue
 
         artist, track = parse_track(query)
         if download(url, final_path, artist, track):
